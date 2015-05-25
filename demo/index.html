@@ -1,0 +1,130 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!doctype html>
+<html>
+<head>
+  <title>paper-rangeslider demo</title>
+
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <link rel="stylesheet" href="../../paper-styles/paper-styles.html">
+  <link rel="import" href="../../paper-styles/demo-pages.html">
+  <link rel="import" href="../../paper-slider/paper-slider.html">
+  <link rel="import" href="../paper-rangeslider.html">
+
+  <style is="custom-style">
+    body {
+      padding: 40px;
+    }
+    
+    paper-rangeslider {
+      width: 100%;
+    }
+
+    paper-rangeslider.blue {
+      --paper-rangeslider-knob-color: var(--paper-light-blue-500);
+      --paper-rangeslider-active-color: var(--paper-light-blue-500);
+    }
+
+    paper-rangeslider.red {
+      --paper-rangeslider-knob-color: var(--paper-red-500);
+      --paper-rangeslider-active-color: var(--paper-red-500);
+    }
+
+    paper-rangeslider.green {
+      --paper-rangeslider-knob-color: var(--paper-green-500);
+      --paper-rangeslider-active-color: var(--paper-green-500);
+    }
+
+    paper-rangeslider.orange {
+      --paper-rangeslider-knob-color: var(--paper-orange-500);
+      --paper-rangeslider-active-color: var(--paper-orange-500);
+      --paper-rangeslider-pin-color: var(--paper-orange-500);
+    }
+
+    #ratingsLabel {
+      padding-left: 12px;
+      color: #a0a0a0;
+    }
+
+  </style>
+
+</head>
+<body>
+  <div class="vertical center-justified layout">
+    <h4>Default</h4>
+    <div class="vertical-section">
+      <div>Oxygen</div>
+      <paper-rangeslider value="21" vMin="20" vMax="60" max="200"></paper-rangeslider><br><br>
+      <paper-slider value="21"></paper-slider><br><br>
+      <div>Argon</div>
+      <paper-rangeslider value="1" vMin="1" vMax="50"></paper-rangeslider><br><br>
+      <div>Hydrogen</div>
+      <paper-rangeslider value="0" vMin="0" vMax="45"></paper-rangeslider><br><br>
+      <div>Nitrogen</div>
+      <paper-rangeslider value="78" vMin="78" vMax="80"></paper-rangeslider><br><br>
+      <div>Sprinkles</div>
+      <paper-rangeslider disabled value="33" vMin="33" vMax="31"></paper-rangeslider>
+    </div>
+
+<!--     <h4>Color</h4>
+    <div class="vertical-section">
+      <paper-progress valueMin="40" class="blue"></paper-progress><br>
+      <paper-progress value="800" min="100" max="1000" class="red"></paper-progress><br>
+      <paper-progress value="40" class="orange"></paper-progress><br>
+      <paper-progress value="200" max="200" class="green"></paper-progress><br>
+      <paper-progress value="40" secondary-progress="80" class="blue"></paper-progress><br>
+    </div>
+
+    <h4>Indeterminate</h4>
+    <div class="vertical-section">
+      <paper-progress indeterminate></paper-progress><br>
+      <paper-progress class="blue" indeterminate alue="800" min="100" max="1000"></paper-progress><br>
+    </div>
+
+    <h4>Editable</h4>
+    <div class="vertical-section">
+      <div class="center horizontal layout">
+        <div>R</div>
+        <paper-rangeslider class="red" value="23" max="255" editable></paper-rangeslider>
+      </div>
+      <div class="center horizontal layout">
+        <div>G</div>
+        <paper-rangeslider class="green" value="183" max="255" editable></paper-rangeslider>
+      </div>
+      <div class="center horizontal layout">
+        <div>B</div>
+        <paper-rangeslider class="blue" value="211" max="255" editable></paper-rangeslider>
+      </div>
+    </div>
+
+    <h4>Labelled pins</h4>
+    <div class="vertical-section">
+      <div>Brightness</div><br>
+      <paper-rangeslider pin value="20" class="orange"></paper-rangeslider>
+      <div>Ratings: <span id="ratingsLabel"></span></div><br>
+      <paper-rangeslider id="ratings" pin snaps max="10" step="1" value="5" class="orange"></paper-rangeslider>
+    </div> -->
+  </div>
+
+  <script>
+
+    // var ratings = document.querySelector('#ratings');
+    // ratings.addEventListener('value-change', function() {
+    //   document.querySelector('#ratingsLabel').textContent = ratings.value;
+    // });
+
+  </script>
+
+</body>
+</html>
