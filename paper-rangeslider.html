@@ -114,10 +114,11 @@ To change the slider disabled secondary progress bar color:
       height: 32px;
     }
 
+/* maybe extra 12 too much....*/
     #sliderContainer.editable {
       float: left;
-      width: calc(100% - 72px);
-      margin: 12px 0;
+      width: calc(100% - 112px - 24px);
+      margin: 12px 12px;
     }
 
     .bar-container {
@@ -231,20 +232,22 @@ To change the slider disabled secondary progress bar color:
       transition-property: height, width, background-color, border, margin;
       transition-duration: 0.1s;
       transition-timing-function: ease;
+
+      /*border: 1px solid #212121;*/
     }
 
 #sliderKnobmin > .sliderKnobInner{
     margin-left: 16px;
     border-radius: 50% 50% 0 50%;
-    -webkit-transform: rotate(-45deg) scale(1) translate(0);
-    transform: rotate(-45deg) scale(1) translate(0);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
 }
 
 #sliderKnobmax > .sliderKnobInner{
     margin-right: 16px;
     border-radius: 50% 50% 50% 0;
-    -webkit-transform: rotate(45deg) scale(1) translate(0);
-    transform: rotate(45deg) scale(1) translate(0);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
     .expand:not(.pin) > .sliderKnob > .sliderKnobInner {
@@ -319,9 +322,17 @@ To change the slider disabled secondary progress bar color:
     }
 
     /* editable: paper-input */
+    #inputmin{
+float: left;
+    }
+
+    #inputmax {
+float: right;
+    }
+
     .slider-input {
       width: 40px;
-      float: right;
+      
       overflow: hidden;
     }
 
@@ -350,9 +361,13 @@ To change the slider disabled secondary progress bar color:
     <template is="dom-if" if="{{!disabled}}">
     </template>
 
-    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, immediateValue, min, expand, dragging, transiting, editable)]]">
+    <template is="dom-if" if="[[editable]]">
+      <paper-input id="inputmin" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
+    </template>
+
+    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, imin, imax, min, expand, dragging, transiting, editable)]]">
       <div class="bar-container">
-        <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[immediateValue]]" secondary-progress="[[secondaryProgress]]"
+        <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[imin]]" secondary-progress="[[imax]]"
           on-down="_bardown" on-up="_resetKnob" on-track="_onTrack"></paper-progress>
       </div>
 
@@ -382,7 +397,7 @@ To change the slider disabled secondary progress bar color:
     </div>
 
     <template is="dom-if" if="[[editable]]">
-      <paper-input id="input" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
+      <paper-input id="inputmax" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
     </template>
 
   </template>
@@ -450,6 +465,20 @@ To change the slider disabled secondary progress bar color:
         notify: true,
         observer: '_secondaryProgressChanged'
       },
+            vmin: {
+      type: Number,
+      value: 0,
+      notify: true,
+      reflectToAttribute: true
+    },
+
+    vmax: {
+      type: Number,
+      value: 100,
+      notify: true,
+      reflectToAttribute: true
+    },
+
 
       /**
        * If true, an input is shown and user can use it to set the slider value.
@@ -458,16 +487,28 @@ To change the slider disabled secondary progress bar color:
         type: Boolean,
         value: false
       },
+    imin: {
+      type: Number,
+      value: 0,
+      notify: true,
+      reflectToAttribute: true
+    },
 
+    imax: {
+      type: Number,
+      value: 0,
+      notify: true,
+      reflectToAttribute: true
+    },
       /**
        * The immediate value of the slider.  This value is updated while the user
        * is dragging the slider.
        */
-      immediateValue: {
-        type: Number,
-        value: 0,
-        readOnly: true
-      },
+      // immediateValue: {
+      //   type: Number,
+      //   value: 0,
+      //   readOnly: true
+      // },
 
       /**
        * The maximum number of markers
@@ -511,19 +552,7 @@ To change the slider disabled secondary progress bar color:
         value: []
       },
 
-      vmin: {
-      type: Number,
-      value: 0,
-      notify: true,
-      reflectToAttribute: true
-    },
 
-    vmax: {
-      type: Number,
-      value: 0,
-      notify: true,
-      reflectToAttribute: true
-    },
 
     rmin: {
       type: Number,
@@ -539,19 +568,7 @@ To change the slider disabled secondary progress bar color:
       reflectToAttribute: true
     },
 
-    imin: {
-      type: Number,
-      value: 100,
-      notify: true,
-      reflectToAttribute: true
-    },
 
-    imax: {
-      type: Number,
-      value: 100,
-      notify: true,
-      reflectToAttribute: true
-    },
 
     active: {
       type: String,
@@ -562,19 +579,22 @@ To change the slider disabled secondary progress bar color:
 
     },
 
+    // order matters right now...
+    // shouldn't?
     observers: [
-      '_updateKnobs(vmin, vmax, min, max, snaps, step)'
-      // '_minChanged(min)',
-      // '_maxChanged(max)',
-      // '_valueChanged(value)',
-      // '_immediateValueChanged(immediateValue)'
+      '_updateKnobs(vmin, vmax, min, max, snaps, step)',
+      '_minChanged(min)',
+      '_maxChanged(max)',
+      '_valuesChanged(vmin, vmax)',
+      '_immediateValueChanged(imin, imax)'
     ],
 
     ready: function() {
       // issue polymer/polymer#1305
       this.async(function() {
+        //window.console.log('async');
         this._updateKnobs(this.vmin, this.vmax);
-        //this._updateInputValue();
+        this._updateInputValues();
       }, 1);
     },
 
@@ -612,16 +632,19 @@ To change the slider disabled secondary progress bar color:
       this.setAttribute('aria-valuemax', this.max);
     },
 
-    _valueChanged: function() {
-      this.setAttribute('aria-valuenow', this.value);
+    _valuesChanged: function() {
+      this.setAttribute('aria-valueminnow', this.vmin);
+      this.setAttribute('aria-valuemaxnow', this.vmax);
       this.fire('value-change');
     },
 
     _immediateValueChanged: function() {
+      //window.console.log('immediate changed', this.imin, this.imax);
       if (!this.dragging) {
-        this.value = this.immediateValue;
+        this.vmin = this.imin;
+        this.vmax = this.imax;
       }
-      this._updateInputValue();
+      this._updateInputValues();
       this.fire('immediate-value-change');
     },
 
@@ -629,9 +652,13 @@ To change the slider disabled secondary progress bar color:
       this.secondaryProgress = this._clampValue(this.secondaryProgress);
     },
 
-    _updateInputValue: function() {
+    _updateInputValues: function() {
+      //window.console.log('update input');
+      //window.console.log('editable', this.editable);
       if (this.editable) {
-        this.$$('#input').value = this.immediateValue;
+        // make sure it is available!
+        this.$$('#inputmin').value = this.imin;
+        this.$$('#inputmax').value = this.imax;
       }
     },
 
@@ -661,7 +688,9 @@ To change the slider disabled secondary progress bar color:
     },
 
     _inputChange: function() {
-      this.value = this.$$('#input').value;
+      // make sure it is available!
+      this.vmin = this.$$('#inputmin').value;
+      this.vmax = this.$$('#inputmax').value;
       this.fire('change');
     },
 
@@ -720,7 +749,7 @@ To change the slider disabled secondary progress bar color:
       var immediate = this._calcStep(
           this._calcKnobPosition(this._x / this._w)) || 0;
 
-        window.console.log(x, this.imax);
+      //window.console.log(x, this.imax);
 
       if(this.active === 'min' && immediate > this.imax){
         this['i' + this.active] = this.imax;
@@ -731,7 +760,7 @@ To change the slider disabled secondary progress bar color:
         this['i' + this.active] = this.imin;
         var ratioMin = this._calcRatio(this['i' + this.active]);
         x = ratioMin * this._w - this._startx ;
-        window.console.log(x);
+        //window.console.log(x);
       }
       else{
         this['i' + this.active] = immediate;
@@ -804,6 +833,7 @@ To change the slider disabled secondary progress bar color:
       classes['expand'] = this.expand;
       classes['dragging'] = this.dragging;
       classes['transiting'] = this.transiting;
+      // window.console.log('editable', this.editable);
       classes['editable'] = this.editable;
 
       return Object.keys(classes).filter(
