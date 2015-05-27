@@ -62,19 +62,21 @@
 </head>
 <body>
   <div class="vertical center-justified layout">
-    <h4>Default</h4>
+    <h4>Defaults</h4>
     <div class="vertical-section">
-      <div>Oxygen</div>
-      <paper-rangeslider value="21" vMin="20" vMax="60" max="200"></paper-rangeslider><br><br>
-      <div>Argon</div>
-      <paper-rangeslider pin value="1" vMin="1" vMax="50"></paper-rangeslider><br><br>
-      <div>Hydrogen</div>
-      <paper-rangeslider pin snaps value="0" vMin="0" vMax="45" min="-50" max="50"></paper-rangeslider><br><br>
-
+      <div>Normal</div>
+      <paper-rangeslider vMin="20" vMax="60" max="200"></paper-rangeslider><br><br>
+      <div>Pins</div>
+      <paper-rangeslider pin vMin="1" vMax="50"></paper-rangeslider><br><br>
+      <div>Pins + snaps</div>
+      <paper-rangeslider pin snaps vMin="3" vMax="7" max="10"></paper-rangeslider><br><br>
+      <div>Editable</div>
+      <paper-rangeslider class="red" vmin="23" max="255" editable></paper-rangeslider>
+<!-- 
       <div>Sprinkles</div>
-      <paper-rangeslider disabled value="33" vMin="33" vMax="31"></paper-rangeslider>
+      <paper-rangeslider disabled vMin="33" vMax="31"></paper-rangeslider> -->
     </div>
-
+<!-- 
     <h4>Editable</h4>
     <div class="vertical-section">
       <div class="center horizontal layout">
@@ -89,7 +91,7 @@
         <div>B</div>
         <paper-rangeslider class="blue" vmax="211" max="255" editable></paper-rangeslider>
       </div>
-    </div>
+    </div> -->
 
 <!--     <h4>Color</h4>
     <div class="vertical-section">
