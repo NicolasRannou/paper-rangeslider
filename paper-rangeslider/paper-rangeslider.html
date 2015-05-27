@@ -1,5 +1,7 @@
 <!--
 @license
+Provided by thje CTKJS Team, based on Polymer Project Authors work.
+
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
 The complete set of authors may be found at http://polymer.github.io/AUTHORS
@@ -15,24 +17,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../paper-input/paper-input.html">
 
 <!--
-`paper-slider` allows user to select a value from a range of values by
-moving the slider thumb.  The interactive nature of the slider makes it a
-great choice for settings that reflect intensity levels, such as volume,
-brightness, or color saturation.
+`paper-rangeslider` allows user to select a range of values from a range of values by
+moving the slider thumbs.  The interactive nature of the slider makes it a
+great choice for settings that reflect thresholding, window-level or region of
+interest selection.
+
+@todo: bug with the snaps, sometimes it jumps... same behavior seems to be happening in original paper-slider.
+@todo: add support to also drag middle bar.
+@todo: fix aria vars.
+@todo: optimize a bit (too many ifs and too many not useful variables it seems).
+@todo: write some tests.
+@todo: review side by side with oeiginal paper-slider.
 
 Example:
 
-    <paper-slider></paper-slider>
+    <paper-rangeslider></paper-rangeslider>
 
 Use `min` and `max` to specify the slider range.  Default is 0 to 100.
+Use `value-min` and `value-max` to specify the selection range.  Default is 0 to 100.
 
 Example:
 
-    <paper-slider min="10" max="200" value="110"></paper-slider>
+    <paper-slider min="10" max="200" value-min="50" value-max="150"></paper-slider>
 
 Styling slider:
 
-To change the slider progress bar color:
+To change the slider active color:
 
     paper-slider {
       --paper-rangeslider-active-color: #0f9d58;
@@ -56,10 +66,10 @@ To change the slider pin's font color:
       --paper-rangeslider-pin-font-color: #0f9d58;
     }
 
-To change the slider secondary progress bar color:
+To change the slider container color:
 
     paper-slider {
-      --paper-rangeslider-secondary-color: #0f9d58;
+      --paper-rangeslider-container-color: #0f9d58;
     }
 
 To change the slider disabled active color:
@@ -68,10 +78,10 @@ To change the slider disabled active color:
       --paper-rangeslider-disabled-active-color: #ccc;
     }
 
-To change the slider disabled secondary progress bar color:
+To change the slider disabled container color:
 
     paper-slider {
-      --paper-rangeslider-disabled-secondary-color: #ccc;
+      --paper-rangeslider-disabled-container-color: #ccc;
     }
 -->
 
@@ -88,20 +98,30 @@ To change the slider disabled secondary progress bar color:
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
+    /* not diabled */
     :host(:not([disabled])) #sliderBar::shadow #activeProgress {
-      background-color: var(--paper-rangeslider-active-color, --google-blue-700);
+      background-color: var(--paper-rangeslider-container-color, --google-grey-300);
+    }
+
+    :host(:not([disabled])) #sliderBar::shadow #progressContainer {
+      background-color: var(--paper-rangeslider-container-color, --google-grey-300);
     }
 
     :host(:not([disabled])) #sliderBar::shadow #secondaryProgress {
-      background-color: var(--paper-rangeslider-secondary-color, --google-blue-300);
+      background-color: var(--paper-rangeslider-active-color, --google-blue-700);
     }
 
+    /* if disabled */
     :host([disabled]) #sliderBar::shadow #activeProgress {
-      background-color: var(--paper-rangeslider-disabled-active-color, --google-grey-500);
+      background-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
     }
 
+    :host([disabled]) #sliderBar::shadow #progressContainer {
+      background-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
+    }
+    
     :host([disabled]) #sliderBar::shadow #secondaryProgress {
-      background-color: var(--paper-rangeslider-disabled-secondary-color, --google-grey-300);
+      background-color: var(--paper-rangeslider-disabled-active-color, --google-grey-500);
     }
 
     :host(:focus) {
@@ -114,11 +134,13 @@ To change the slider disabled secondary progress bar color:
       height: 32px;
     }
 
-/* maybe extra 12 too much....*/
+    /*
+      40 <input Min> + 32 <offset from touch area (32x32 square)> + 40 <input Max>
+    */
     #sliderContainer.editable {
       float: left;
-      width: calc(100% - 112px - 24px);
-      margin: 12px 12px;
+      width: calc(100% - 40px - 32px - 40px);
+      margin: 12px 0;
     }
 
     .bar-container {
@@ -231,24 +253,24 @@ To change the slider disabled secondary progress bar color:
       background-color: var(--paper-rangeslider-knob-color, --google-blue-700);
       transition-property: height, width, background-color, border, margin;
       transition-duration: 0.1s;
-      transition-timing-function: ease;
+      transition-timmediateMing-function: ease;
 
       /*border: 1px solid #212121;*/
     }
 
-#sliderKnobmin > .sliderKnobInner{
-    margin-left: 16px;
-    border-radius: 50% 50% 0 50%;
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-}
+    #sliderKnobmin > .sliderKnobInner{
+      margin-left: 16px;
+      border-radius: 50% 50% 0 50%;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+    }
 
-#sliderKnobmax > .sliderKnobInner{
-    margin-right: 16px;
-    border-radius: 50% 50% 50% 0;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
+    #sliderKnobmax > .sliderKnobInner{
+      margin-right: 16px;
+      border-radius: 50% 50% 50% 0;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
 
     .expand:not(.pin) > .sliderKnob > .sliderKnobInner {
       width: 100%;
@@ -267,7 +289,7 @@ To change the slider disabled secondary progress bar color:
 
     .ring > .sliderKnob > .sliderKnobInner {
       background-color: transparent;
-      border: 2px solid #c8c8c8;
+      border: 2px solid var(--paper-rangeslider-knob-color, --google-blue-700);;
     }
 
     .sliderKnobInner::before {
@@ -291,10 +313,6 @@ To change the slider disabled secondary progress bar color:
     .sliderKnobInner::after {
       transition: -webkit-transform .2s ease, background-color .18s ease;
       transition: transform .2s ease, background-color .18s ease;
-    }
-
-    .pin.ring > .sliderKnob > .sliderKnobInner::before {
-      background-color: #c8c8c8;
     }
 
     .pin.expand > .sliderKnob > .sliderKnobInner::before {
@@ -322,12 +340,12 @@ To change the slider disabled secondary progress bar color:
     }
 
     /* editable: paper-input */
-    #inputmin{
-float: left;
+    #inputMin{
+      float: left;
     }
 
-    #inputmax {
-float: right;
+    #inputMax {
+      float: right;
     }
 
     .slider-input {
@@ -362,12 +380,12 @@ float: right;
     </template>
 
     <template is="dom-if" if="[[editable]]">
-      <paper-input id="inputmin" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
+      <paper-input id="inputMin" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
     </template>
 
-    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, imin, imax, min, expand, dragging, transiting, editable)]]">
+    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, immediateMin, immediateMax, min, expand, dragging, transiting, editable)]]">
       <div class="bar-container">
-        <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[imin]]" secondary-progress="[[imax]]"
+        <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[immediateMin]]" secondary-progress="[[immediateMax]]"
           on-down="_bardown" on-up="_resetKnob" on-track="_onTrack"></paper-progress>
       </div>
 
@@ -379,25 +397,25 @@ float: right;
         </div>
       </template>
 
-      <div id="sliderKnobmin" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
+      <div id="sliderKnobMin" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
 
-        <div class="sliderKnobInner" value$="[[imin]]"></div>
+        <div class="sliderKnobInner" value$="[[immediateMin]]"></div>
       </div>
 
-      <div id="sliderKnobmax" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
+      <div id="sliderKnobMax" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
 
-        <div class="sliderKnobInner" value$="[[imax]]"></div>
+        <div class="sliderKnobInner" value$="[[immediateMax]]"></div>
       </div>
     </div>
 
     <template is="dom-if" if="[[editable]]">
-      <paper-input id="inputmax" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
+      <paper-input id="inputMax" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
     </template>
 
   </template>
@@ -405,24 +423,8 @@ float: right;
 
 <script>
   /**
-   * Fired when the slider's value changes.
-   *
-   * @event value-change
-   */
-
-  /**
-   * Fired when the slider's immediateValue changes.
-   *
-   * @event immediate-value-change
-   */
-
-  /**
-   * Fired when the slider's value changes due to user interaction.
-   *
-   * Changes to the slider's value due to changes in an underlying
-   * bound variable will not trigger this event.
-   *
-   * @event change
+   * @todo update fired events
+   * @todo update aria vars
    */
 
   Polymer({
@@ -465,20 +467,26 @@ float: right;
         notify: true,
         observer: '_secondaryProgressChanged'
       },
-            vmin: {
-      type: Number,
-      value: 0,
-      notify: true,
-      reflectToAttribute: true
-    },
 
-    vmax: {
-      type: Number,
-      value: 100,
-      notify: true,
-      reflectToAttribute: true
-    },
+     /**
+      * The number that represents the current min value.
+      */
+      valueMin: {
+        type: Number,
+        value: 0,
+        notify: true,
+        reflectToAttribute: true
+      },
 
+     /**
+      * The number that represents the current max value.
+      */
+      valueMax: {
+        type: Number,
+        value: 100,
+        notify: true,
+        reflectToAttribute: true
+      },
 
       /**
        * If true, an input is shown and user can use it to set the slider value.
@@ -487,28 +495,30 @@ float: right;
         type: Boolean,
         value: false
       },
-    imin: {
-      type: Number,
-      value: 0,
-      notify: true,
-      reflectToAttribute: true
-    },
 
-    imax: {
-      type: Number,
-      value: 0,
-      notify: true,
-      reflectToAttribute: true
-    },
       /**
-       * The immediate value of the slider.  This value is updated while the user
-       * is dragging the slider.
+       * The immediate min value of the slider.  This value is updated while the user
+       * is dragging the min slider.
+       * @todo: should be read only
        */
-      // immediateValue: {
-      //   type: Number,
-      //   value: 0,
-      //   readOnly: true
-      // },
+      immediateMin: {
+        type: Number,
+        value: 0,
+        notify: true,
+        reflectToAttribute: true
+      },
+
+      /**
+       * The immediate max value of the slider.  This value is updated while the user
+       * is dragging the max slider.
+       * @todo: should be read only
+       */
+      immediateMax: {
+        type: Number,
+        value: 0,
+        notify: true,
+        reflectToAttribute: true
+      },
 
       /**
        * The maximum number of markers
@@ -552,48 +562,44 @@ float: right;
         value: []
       },
 
+      ratioMin: {
+        type: Number,
+        value: 0,
+        notify: true,
+        reflectToAttribute: true
+      },
 
+      ratioMax: {
+        type: Number,
+        value: 100,
+        notify: true,
+        reflectToAttribute: true
+      },
 
-    rmin: {
-      type: Number,
-      value: 0,
-      notify: true,
-      reflectToAttribute: true
-    },
-
-    rmax: {
-      type: Number,
-      value: 100,
-      notify: true,
-      reflectToAttribute: true
-    },
-
-
-
-    active: {
-      type: String,
-      value: '',
-      notify: true,
-      reflectToAttribute: true
-    },
+      active: {
+        type: String,
+        value: '',
+        notify: true,
+        reflectToAttribute: true
+      },
 
     },
 
     // order matters right now...
     // shouldn't?
     observers: [
-      '_updateKnobs(vmin, vmax, min, max, snaps, step)',
+      '_updateKnobs(valueMin, valueMax, min, max, snaps, step)',
       '_minChanged(min)',
       '_maxChanged(max)',
-      '_valuesChanged(vmin, vmax)',
-      '_immediateValueChanged(imin, imax)'
+      '_valuesChanged(valueMin, valueMax)',
+      '_immediateValueChanged(immediateMin, immediateMax)'
     ],
 
     ready: function() {
       // issue polymer/polymer#1305
       this.async(function() {
         //window.console.log('async');
-        this._updateKnobs(this.vmin, this.vmax);
+        this._updateKnobs(this.valueMin, this.valueMax);
         this._updateInputValues();
       }, 1);
     },
@@ -616,12 +622,12 @@ float: right;
 
     _updateKnobs: function(valueMin, valueMax) {
       // update min knob
-      this.rmin = this._calcRatio(valueMin);
-      this._positionKnob(this.rmin, 'min');
+      this.ratioMin = this._calcRatio(valueMin);
+      this._positionKnob(this.ratioMin, 'Min');
 
       // update max knob
-      this.rmax = this._calcRatio(valueMax);
-      this._positionKnob(this.rmax, 'max');
+      this.ratioMax = this._calcRatio(valueMax);
+      this._positionKnob(this.ratioMax, 'Max');
     },
 
     _minChanged: function() {
@@ -633,16 +639,15 @@ float: right;
     },
 
     _valuesChanged: function() {
-      this.setAttribute('aria-valueminnow', this.vmin);
-      this.setAttribute('aria-valuemaxnow', this.vmax);
+      this.setAttribute('aria-valueminnow', this.valueMin);
+      this.setAttribute('aria-valuemaxnow', this.valueMax);
       this.fire('value-change');
     },
 
     _immediateValueChanged: function() {
-      //window.console.log('immediate changed', this.imin, this.imax);
       if (!this.dragging) {
-        this.vmin = this.imin;
-        this.vmax = this.imax;
+        this.valueMin = this.immediateMin;
+        this.valueMax = this.immediateMax;
       }
       this._updateInputValues();
       this.fire('immediate-value-change');
@@ -653,12 +658,12 @@ float: right;
     },
 
     _updateInputValues: function() {
-      //window.console.log('update input');
-      //window.console.log('editable', this.editable);
       if (this.editable) {
-        // make sure it is available!
-        this.$$('#inputmin').value = this.imin;
-        this.$$('#inputmax').value = this.imax;
+        /**
+         * @todo make sure it is available!
+         */
+        this.$$('#inputMin').value = this.immediateMin;
+        this.$$('#inputMax').value = this.immediateMax;
       }
     },
 
@@ -673,24 +678,25 @@ float: right;
 
     _positionKnob: function(ratio, position) {
       // position == min || max
-      this['i' + position] = this._calcStep(this._calcKnobPosition(ratio)) || 0;
-      this['r' + position] = this.snaps ? this._calcRatio(this['i' + position]) : ratio;
+      this['immediate' + position] = this._calcStep(this._calcKnobPosition(ratio)) || 0;
+      this['ratio' + position] = this.snaps ? this._calcRatio(this['immediate' + position]) : ratio;
+      // create right offset
       // min : -16px
       // max : +16px
       var style = '';
-      if(position === 'min'){
-        style =  'calc( ' + this['r' + position] * 100 + '% - 16px)';
+      if(position === 'Min'){
+        style =  'calc( ' + this['ratio' + position] * 100 + '% - 16px)';
       }
       else{
-        style =  'calc( ' + this['r' + position] * 100 + '% + 16px)';
+        style =  'calc( ' + this['ratio' + position] * 100 + '% + 16px)';
       }
       this.$['sliderKnob' + position].style.left = style;
     },
 
     _inputChange: function() {
       // make sure it is available!
-      this.vmin = this.$$('#inputmin').value;
-      this.vmax = this.$$('#inputmax').value;
+      this.valueMin = this.$$('#inputMin').value;
+      this.valueMax = this.$$('#inputMax').value;
       this.fire('change');
     },
 
@@ -713,11 +719,11 @@ float: right;
     },
 
     _trackStart: function(e) {
-      if(e.target.id === 'sliderKnobmin'){
-        this.active = 'min';
+      if(e.target.id === 'sliderKnobMin'){
+        this.active = 'Min';
       }
-      else if (e.target.id === 'sliderKnobmax'){
-        this.active = 'max';
+      else if (e.target.id === 'sliderKnobMax'){
+        this.active = 'Max';
       }
       else{
         // dragging the bar..!
@@ -726,7 +732,7 @@ float: right;
       }
 
       this._w = this.$.sliderBar.offsetWidth;
-      this._x = this['r' + this.active] * this._w;
+      this._x = this['ratio' + this.active] * this._w;
       this._startx = this._x || 0;
       this._minx = - this._startx;
       this._maxx = this._w - this._startx;
@@ -749,27 +755,26 @@ float: right;
       var immediate = this._calcStep(
           this._calcKnobPosition(this._x / this._w)) || 0;
 
-      //window.console.log(x, this.imax);
-
-      if(this.active === 'min' && immediate > this.imax){
-        this['i' + this.active] = this.imax;
-        var ratioMax = this._calcRatio(this['i' + this.active]);
+      // make sure min =< max
+      // and max >= min
+      if(this.active === 'Min' && immediate > this.immediateMax){
+        this['immediate' + this.active] = this.immediateMax;
+        var ratioMax = this._calcRatio(this['immediate' + this.active]);
         x = ratioMax * this._w - this._startx;
       }
-      else if(this.active === 'max' && immediate < this.imin){
-        this['i' + this.active] = this.imin;
-        var ratioMin = this._calcRatio(this['i' + this.active]);
+      else if(this.active === 'Max' && immediate < this.immediateMin){
+        this['immediate' + this.active] = this.immediateMin;
+        var ratioMin = this._calcRatio(this['immediate' + this.active]);
         x = ratioMin * this._w - this._startx ;
-        //window.console.log(x);
       }
       else{
-        this['i' + this.active] = immediate;
+        this['immediate' + this.active] = immediate;
       }
       
       var s =  this.$['sliderKnob' + this.active].style;
 
       s.transform = s.webkitTransform = 'translate3d(' + (this.snaps ?
-          (this._calcRatio(this['i' + this.active]) * this._w) - this._startx : x) + 'px, 0, 0)';
+          (this._calcRatio(this['immediate' + this.active]) * this._w) - this._startx : x) + 'px, 0, 0)';
 
     },
 
@@ -784,7 +789,7 @@ float: right;
       this.$['sliderKnob' + this.active].classList.remove('dragging');
       this._setDragging(false);
       this._resetKnob();
-      this['v' + this.active] = this['i' + this.active];
+      this['value' + this.active] = this['immediate' + this.active];
       this.active = '';
       this.fire('change');
     },
@@ -829,11 +834,10 @@ float: right;
       classes['disabled'] = this.disabled;
       classes['pin'] = this.pin;
       classes['snaps'] = this.snaps;
-      classes['ring'] = this.imax < this.imin;
+      classes['ring'] = this.immediateMax == this.immediateMin;
       classes['expand'] = this.expand;
       classes['dragging'] = this.dragging;
       classes['transiting'] = this.transiting;
-      // window.console.log('editable', this.editable);
       classes['editable'] = this.editable;
 
       return Object.keys(classes).filter(

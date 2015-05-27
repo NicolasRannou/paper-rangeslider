@@ -9,14 +9,17 @@
     "polymer",
     "paper",
     "slider",
+    "range",
+    "rangeslider",
+    "range-slider",
     "control"
   ],
   "main": [
-    "paper-slider.html"
+    "paper-rangeslider.html"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/PolymerElements/paper-slider.git"
+    "url": "git://github.com/NicolasRannou/paper-rangeslider.git"
   },
   "dependencies": {
     "paper-input": "PolymerElements/paper-input#^0.9.0",

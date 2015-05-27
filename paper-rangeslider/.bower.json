@@ -8,14 +8,17 @@
     "polymer",
     "paper",
     "slider",
+    "range",
+    "rangeslider",
+    "range-slider",
     "control"
   ],
   "main": [
-    "paper-slider.html"
+    "paper-rangeslider.html"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/PolymerElements/paper-slider.git"
+    "url": "git://github.com/NicolasRannou/paper-rangeslider.git"
   },
   "dependencies": {
     "paper-input": "PolymerElements/paper-input#^0.9.0",
@@ -33,11 +36,11 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/NicolasRannou/paper-rangeslider",
-  "_release": "da0b6ce2e8",
+  "_release": "937cbf7cf0",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "da0b6ce2e848ee2f9c446748912f8d50172c81fd"
+    "commit": "937cbf7cf00bdb445c87aec2c62a657156ae0220"
   },
   "_source": "git://github.com/NicolasRannou/paper-rangeslider.git",
   "_target": "master",
