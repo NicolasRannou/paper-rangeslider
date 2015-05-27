@@ -243,24 +243,24 @@ var(--paper-progress-container-color, --google-grey-300)*/
       background-color: var(--paper-rangeslider-knob-color, --google-blue-700);
       transition-property: height, width, background-color, border, margin;
       transition-duration: 0.1s;
-      transition-timing-function: ease;
+      transition-tiMing-function: ease;
 
       /*border: 1px solid #212121;*/
     }
 
-#sliderKnobmin > .sliderKnobInner{
-    margin-left: 16px;
-    border-radius: 50% 50% 0 50%;
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-}
+    #sliderKnobmin > .sliderKnobInner{
+      margin-left: 16px;
+      border-radius: 50% 50% 0 50%;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+    }
 
-#sliderKnobmax > .sliderKnobInner{
-    margin-right: 16px;
-    border-radius: 50% 50% 50% 0;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
+    #sliderKnobmax > .sliderKnobInner{
+      margin-right: 16px;
+      border-radius: 50% 50% 50% 0;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
 
     .expand:not(.pin) > .sliderKnob > .sliderKnobInner {
       width: 100%;
@@ -334,12 +334,12 @@ var(--paper-progress-container-color, --google-grey-300)*/
     }
 
     /* editable: paper-input */
-    #inputmin{
-float: left;
+    #inputMin{
+      float: left;
     }
 
-    #inputmax {
-float: right;
+    #inputMax {
+      float: right;
     }
 
     .slider-input {
@@ -374,12 +374,12 @@ float: right;
     </template>
 
     <template is="dom-if" if="[[editable]]">
-      <paper-input id="inputmin" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
+      <paper-input id="inputMin" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
     </template>
 
-    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, imin, imax, min, expand, dragging, transiting, editable)]]">
+    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, iMin, iMax, min, expand, dragging, transiting, editable)]]">
       <div class="bar-container">
-        <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[imin]]" secondary-progress="[[imax]]"
+        <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[iMin]]" secondary-progress="[[iMax]]"
           on-down="_bardown" on-up="_resetKnob" on-track="_onTrack"></paper-progress>
       </div>
 
@@ -391,25 +391,25 @@ float: right;
         </div>
       </template>
 
-      <div id="sliderKnobmin" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
+      <div id="sliderKnobMin" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
 
-        <div class="sliderKnobInner" value$="[[imin]]"></div>
+        <div class="sliderKnobInner" value$="[[iMin]]"></div>
       </div>
 
-      <div id="sliderKnobmax" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
+      <div id="sliderKnobMax" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
 
-        <div class="sliderKnobInner" value$="[[imax]]"></div>
+        <div class="sliderKnobInner" value$="[[iMax]]"></div>
       </div>
     </div>
 
     <template is="dom-if" if="[[editable]]">
-      <paper-input id="inputmax" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
+      <paper-input id="inputMax" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
     </template>
 
   </template>
@@ -477,14 +477,14 @@ float: right;
         notify: true,
         observer: '_secondaryProgressChanged'
       },
-            vmin: {
+      vMin: {
       type: Number,
       value: 0,
       notify: true,
       reflectToAttribute: true
     },
 
-    vmax: {
+    vMax: {
       type: Number,
       value: 100,
       notify: true,
@@ -499,14 +499,14 @@ float: right;
         type: Boolean,
         value: false
       },
-    imin: {
+    iMin: {
       type: Number,
       value: 0,
       notify: true,
       reflectToAttribute: true
     },
 
-    imax: {
+    iMax: {
       type: Number,
       value: 0,
       notify: true,
@@ -566,14 +566,14 @@ float: right;
 
 
 
-    rmin: {
+    rMin: {
       type: Number,
       value: 0,
       notify: true,
       reflectToAttribute: true
     },
 
-    rmax: {
+    rMax: {
       type: Number,
       value: 100,
       notify: true,
@@ -594,18 +594,18 @@ float: right;
     // order matters right now...
     // shouldn't?
     observers: [
-      '_updateKnobs(vmin, vmax, min, max, snaps, step)',
+      '_updateKnobs(vMin, vMax, min, max, snaps, step)',
       '_minChanged(min)',
       '_maxChanged(max)',
-      '_valuesChanged(vmin, vmax)',
-      '_immediateValueChanged(imin, imax)'
+      '_valuesChanged(vMin, vMax)',
+      '_immediateValueChanged(iMin, iMax)'
     ],
 
     ready: function() {
       // issue polymer/polymer#1305
       this.async(function() {
         //window.console.log('async');
-        this._updateKnobs(this.vmin, this.vmax);
+        this._updateKnobs(this.vMin, this.vMax);
         this._updateInputValues();
       }, 1);
     },
@@ -628,12 +628,12 @@ float: right;
 
     _updateKnobs: function(valueMin, valueMax) {
       // update min knob
-      this.rmin = this._calcRatio(valueMin);
-      this._positionKnob(this.rmin, 'min');
+      this.rMin = this._calcRatio(valueMin);
+      this._positionKnob(this.rMin, 'Min');
 
       // update max knob
-      this.rmax = this._calcRatio(valueMax);
-      this._positionKnob(this.rmax, 'max');
+      this.rMax = this._calcRatio(valueMax);
+      this._positionKnob(this.rMax, 'Max');
     },
 
     _minChanged: function() {
@@ -645,16 +645,16 @@ float: right;
     },
 
     _valuesChanged: function() {
-      this.setAttribute('aria-valueminnow', this.vmin);
-      this.setAttribute('aria-valuemaxnow', this.vmax);
+      this.setAttribute('aria-valueminnow', this.vMin);
+      this.setAttribute('aria-valuemaxnow', this.vMax);
       this.fire('value-change');
     },
 
     _immediateValueChanged: function() {
-      //window.console.log('immediate changed', this.imin, this.imax);
+      //window.console.log('immediate changed', this.iMin, this.iMax);
       if (!this.dragging) {
-        this.vmin = this.imin;
-        this.vmax = this.imax;
+        this.vMin = this.iMin;
+        this.vMax = this.iMax;
       }
       this._updateInputValues();
       this.fire('immediate-value-change');
@@ -669,8 +669,8 @@ float: right;
       //window.console.log('editable', this.editable);
       if (this.editable) {
         // make sure it is available!
-        this.$$('#inputmin').value = this.imin;
-        this.$$('#inputmax').value = this.imax;
+        this.$$('#inputMin').value = this.iMin;
+        this.$$('#inputMax').value = this.iMax;
       }
     },
 
@@ -687,10 +687,11 @@ float: right;
       // position == min || max
       this['i' + position] = this._calcStep(this._calcKnobPosition(ratio)) || 0;
       this['r' + position] = this.snaps ? this._calcRatio(this['i' + position]) : ratio;
+      // create right offset
       // min : -16px
       // max : +16px
       var style = '';
-      if(position === 'min'){
+      if(position === 'Min'){
         style =  'calc( ' + this['r' + position] * 100 + '% - 16px)';
       }
       else{
@@ -701,8 +702,8 @@ float: right;
 
     _inputChange: function() {
       // make sure it is available!
-      this.vmin = this.$$('#inputmin').value;
-      this.vmax = this.$$('#inputmax').value;
+      this.vMin = this.$$('#inputMin').value;
+      this.vMax = this.$$('#inputMax').value;
       this.fire('change');
     },
 
@@ -725,11 +726,11 @@ float: right;
     },
 
     _trackStart: function(e) {
-      if(e.target.id === 'sliderKnobmin'){
-        this.active = 'min';
+      if(e.target.id === 'sliderKnobMin'){
+        this.active = 'Min';
       }
-      else if (e.target.id === 'sliderKnobmax'){
-        this.active = 'max';
+      else if (e.target.id === 'sliderKnobMax'){
+        this.active = 'Max';
       }
       else{
         // dragging the bar..!
@@ -761,15 +762,15 @@ float: right;
       var immediate = this._calcStep(
           this._calcKnobPosition(this._x / this._w)) || 0;
 
-      //window.console.log(x, this.imax);
+      //window.console.log(x, this.iMax);
 
-      if(this.active === 'min' && immediate > this.imax){
-        this['i' + this.active] = this.imax;
+      if(this.active === 'Min' && immediate > this.iMax){
+        this['i' + this.active] = this.iMax;
         var ratioMax = this._calcRatio(this['i' + this.active]);
         x = ratioMax * this._w - this._startx;
       }
-      else if(this.active === 'max' && immediate < this.imin){
-        this['i' + this.active] = this.imin;
+      else if(this.active === 'Max' && immediate < this.iMin){
+        this['i' + this.active] = this.iMin;
         var ratioMin = this._calcRatio(this['i' + this.active]);
         x = ratioMin * this._w - this._startx ;
         //window.console.log(x);
@@ -841,7 +842,7 @@ float: right;
       classes['disabled'] = this.disabled;
       classes['pin'] = this.pin;
       classes['snaps'] = this.snaps;
-      classes['ring'] = this.imax < this.imin;
+      classes['ring'] = this.iMax < this.iMin;
       classes['expand'] = this.expand;
       classes['dragging'] = this.dragging;
       classes['transiting'] = this.transiting;
