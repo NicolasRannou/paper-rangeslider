@@ -1,5 +1,7 @@
 <!--
     @license
+    Provided by thje CTKJS Team, based on Polymer Project Authors work.
+
     Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
     This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
     The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
@@ -57,6 +59,12 @@
       --paper-rangeslider-active-color: var(--paper-orange-500);
     }
 
+    paper-rangeslider.purple {
+      --paper-rangeslider-container-color: var(--paper-deep-purple-100);
+      --paper-rangeslider-knob-color: var(--paper-deep-purple-500);
+      --paper-rangeslider-active-color: var(--paper-deep-purple-500);
+    }
+
     #ratingsLabel {
       padding-left: 12px;
       color: #a0a0a0;
@@ -70,74 +78,18 @@
     <h4>Defaults</h4>
     <div class="vertical-section">
       <div>Normal</div>
-      <paper-rangeslider class="blue" v-min="20" v-max="60" max="200"></paper-rangeslider><br><br>
+      <paper-rangeslider class="blue" value-min="20" value-max="60" max="200"></paper-rangeslider><br><br>
       <div>Pins</div>
-      <paper-rangeslider class="red" pin v-min="50" v-max="80"></paper-rangeslider><br><br>
+      <paper-rangeslider class="red" pin value-min="50" value-max="80"></paper-rangeslider><br><br>
       <div>Pins + snaps</div>
-      <paper-rangeslider class="green" pin snaps v-min="2" v-max="6" max="10"></paper-rangeslider><br><br>
+      <paper-rangeslider class="green" pin snaps value-min="2" value-max="6" max="10"></paper-rangeslider><br><br>
       <div>Editable</div>
-      <paper-rangeslider class="orange" v-min="120" v-max="220" max="255" editable></paper-rangeslider>
+      <paper-rangeslider class="orange" value-min="120" value-max="220" max="255" editable></paper-rangeslider>
+      <div>Single value</div>
+      <paper-rangeslider class="purple" value-min="60" value-max="60" max="200"></paper-rangeslider><br><br>
       <div>Disabled</div>
-      <paper-rangeslider class="blue" v-min="20" v-max="100" max="255" disabled></paper-rangeslider>
-<!-- 
-      <div>Sprinkles</div>
-      <paper-rangeslider disabled value-min="33" vMax="31"></paper-rangeslider> -->
+      <paper-rangeslider class="blue" value-min="20" value-max="100" max="255" disabled></paper-rangeslider>
     </div>
-<!-- 
-    <h4>Editable</h4>
-    <div class="vertical-section">
-      <div class="center horizontal layout">
-        <div>R</div>
-        <paper-rangeslider class="red" value-min="23" max="255" editable></paper-rangeslider>
-      </div>
-      <div class="center horizontal layout">
-        <div>G</div>
-        <paper-rangeslider class="green" vmax="183" max="255" editable></paper-rangeslider>
-      </div>
-      <div class="center horizontal layout">
-        <div>B</div>
-        <paper-rangeslider class="blue" vmax="211" max="255" editable></paper-rangeslider>
-      </div>
-    </div> -->
-
-<!--     <h4>Color</h4>
-    <div class="vertical-section">
-      <paper-progress valueMin="40" class="blue"></paper-progress><br>
-      <paper-progress value="800" min="100" max="1000" class="red"></paper-progress><br>
-      <paper-progress value="40" class="orange"></paper-progress><br>
-      <paper-progress value="200" max="200" class="green"></paper-progress><br>
-      <paper-progress value="40" secondary-progress="80" class="blue"></paper-progress><br>
-    </div>
-
-    <h4>Indeterminate</h4>
-    <div class="vertical-section">
-      <paper-progress indeterminate></paper-progress><br>
-      <paper-progress class="blue" indeterminate alue="800" min="100" max="1000"></paper-progress><br>
-    </div>
-
-    <h4>Editable</h4>
-    <div class="vertical-section">
-      <div class="center horizontal layout">
-        <div>R</div>
-        <paper-rangeslider class="red" value="23" max="255" editable></paper-rangeslider>
-      </div>
-      <div class="center horizontal layout">
-        <div>G</div>
-        <paper-rangeslider class="green" value="183" max="255" editable></paper-rangeslider>
-      </div>
-      <div class="center horizontal layout">
-        <div>B</div>
-        <paper-rangeslider class="blue" value="211" max="255" editable></paper-rangeslider>
-      </div>
-    </div>
-
-    <h4>Labelled pins</h4>
-    <div class="vertical-section">
-      <div>Brightness</div><br>
-      <paper-rangeslider pin value="20" class="orange"></paper-rangeslider>
-      <div>Ratings: <span id="ratingsLabel"></span></div><br>
-      <paper-rangeslider id="ratings" pin snaps max="10" step="1" value="5" class="orange"></paper-rangeslider>
-    </div> -->
   </div>
 
   <script>
