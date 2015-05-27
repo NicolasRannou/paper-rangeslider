@@ -88,22 +88,34 @@ To change the slider disabled secondary progress bar color:
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
+/* not diabled */
     :host(:not([disabled])) #sliderBar::shadow #activeProgress {
-      background-color: var(--paper-rangeslider-active-color, --google-blue-700);
+      background-color: var(--paper-rangeslider-container-color, --google-grey-300);
+    }
+
+    :host(:not([disabled])) #sliderBar::shadow #progressContainer {
+      background-color: var(--paper-rangeslider-container-color, --google-grey-300);
     }
 
     :host(:not([disabled])) #sliderBar::shadow #secondaryProgress {
-      background-color: var(--paper-rangeslider-secondary-color, --google-blue-300);
+      background-color: var(--paper-rangeslider-active-color, --google-blue-700);
     }
 
+/* if disabled */
     :host([disabled]) #sliderBar::shadow #activeProgress {
+      background-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
+    }
+
+    :host([disabled]) #sliderBar::shadow #progressContainer {
+      background-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
+    }
+    
+    :host([disabled]) #sliderBar::shadow #secondaryProgress {
       background-color: var(--paper-rangeslider-disabled-active-color, --google-grey-500);
     }
 
-    :host([disabled]) #sliderBar::shadow #secondaryProgress {
-      background-color: var(--paper-rangeslider-disabled-secondary-color, --google-grey-300);
-    }
-
+/*--paper-progress-container-color
+var(--paper-progress-container-color, --google-grey-300)*/
     :host(:focus) {
       outline: none;
     }

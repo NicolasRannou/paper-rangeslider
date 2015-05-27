@@ -32,24 +32,29 @@
     }
 
     paper-rangeslider.blue {
+      --paper-rangeslider-container-color: var(--paper-light-blue-100);
       --paper-rangeslider-knob-color: var(--paper-light-blue-500);
       --paper-rangeslider-active-color: var(--paper-light-blue-500);
     }
 
     paper-rangeslider.red {
+      --paper-rangeslider-container-color: var(--paper-red-100);
       --paper-rangeslider-knob-color: var(--paper-red-500);
       --paper-rangeslider-active-color: var(--paper-red-500);
+      --paper-rangeslider-pin-color: var(--paper-red-500);
     }
 
     paper-rangeslider.green {
+      --paper-rangeslider-container-color: var(--paper-green-100);
       --paper-rangeslider-knob-color: var(--paper-green-500);
       --paper-rangeslider-active-color: var(--paper-green-500);
+      --paper-rangeslider-pin-color: var(--paper-green-500);
     }
 
     paper-rangeslider.orange {
+      --paper-rangeslider-container-color: var(--paper-orange-100);
       --paper-rangeslider-knob-color: var(--paper-orange-500);
       --paper-rangeslider-active-color: var(--paper-orange-500);
-      --paper-rangeslider-pin-color: var(--paper-orange-500);
     }
 
     #ratingsLabel {
@@ -65,13 +70,13 @@
     <h4>Defaults</h4>
     <div class="vertical-section">
       <div>Normal</div>
-      <paper-rangeslider vMin="20" vMax="60" max="200"></paper-rangeslider><br><br>
+      <paper-rangeslider class="blue" vMin="20" vMax="60" max="200"></paper-rangeslider><br><br>
       <div>Pins</div>
-      <paper-rangeslider pin vMin="1" vMax="50"></paper-rangeslider><br><br>
+      <paper-rangeslider class="red" pin vMin="1" vMax="50"></paper-rangeslider><br><br>
       <div>Pins + snaps</div>
-      <paper-rangeslider pin snaps vMin="3" vMax="7" max="10"></paper-rangeslider><br><br>
+      <paper-rangeslider class="green" pin snaps vMin="3" vMax="7" max="10"></paper-rangeslider><br><br>
       <div>Editable</div>
-      <paper-rangeslider class="red" vmin="23" max="255" editable></paper-rangeslider>
+      <paper-rangeslider class="orange" vmin="23" max="255" editable></paper-rangeslider>
 <!-- 
       <div>Sprinkles</div>
       <paper-rangeslider disabled vMin="33" vMax="31"></paper-rangeslider> -->
