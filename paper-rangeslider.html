@@ -98,30 +98,17 @@ To change the slider disabled container color:
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
-    /* not diabled */
-    :host(:not([disabled])) #sliderBar::shadow #activeProgress {
-      background-color: var(--paper-rangeslider-container-color, --google-grey-300);
-    }
-
-    :host(:not([disabled])) #sliderBar::shadow #progressContainer {
-      background-color: var(--paper-rangeslider-container-color, --google-grey-300);
-    }
-
-    :host(:not([disabled])) #sliderBar::shadow #secondaryProgress {
-      background-color: var(--paper-rangeslider-active-color, --google-blue-700);
+    #sliderBar {
+      --paper-progress-container-color: var(--paper-rangeslider-container-color, --google-grey-300);
+      --paper-progress-active-color: var(--paper-rangeslider-container-color, --google-grey-300);
+      --paper-progress-secondary-color: var(--paper-rangeslider-active-color, --google-blue-700);
     }
 
     /* if disabled */
-    :host([disabled]) #sliderBar::shadow #activeProgress {
-      background-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
-    }
-
-    :host([disabled]) #sliderBar::shadow #progressContainer {
-      background-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
-    }
-    
-    :host([disabled]) #sliderBar::shadow #secondaryProgress {
-      background-color: var(--paper-rangeslider-disabled-active-color, --google-grey-500);
+    :host([disabled]) #sliderBar {
+      --paper-progress-disabled-active-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
+      --paper-progress-container-color: var(--paper-rangeslider-disabled-container-color, --google-grey-300);
+      --paper-progress-disabled-secondary-color: var(--paper-rangeslider-disabled-active-color, --google-grey-500);
     }
 
     :host(:focus) {
@@ -205,11 +192,6 @@ To change the slider disabled container color:
       height: 2px;
       border-radius: 50%;
       background-color: black;
-    }
-
-    .transiting #sliderBar::shadow #activeProgress {
-      transition: -webkit-transform 0.08s ease;
-      transition: transform 0.08s ease;
     }
 
     .sliderKnob {
@@ -352,11 +334,6 @@ To change the slider disabled container color:
       width: 40px;
       
       overflow: hidden;
-    }
-
-    .slider-input::shadow input {
-      /* FIXME(ffu): should one be able set text-align directly on paper-input? */
-      text-align: center;
     }
 
     /* disabled state */
@@ -672,7 +649,9 @@ To change the slider disabled container color:
     },
 
     _resetKnob: function() {
-      this._expandJob && this._expandJob.stop();
+      if (this._expandJob) {
+        this._expandJob.stop();
+      }
       this._setExpand(false);
     },
 
@@ -680,17 +659,7 @@ To change the slider disabled container color:
       // position == min || max
       this['immediate' + position] = this._calcStep(this._calcKnobPosition(ratio)) || 0;
       this['ratio' + position] = this.snaps ? this._calcRatio(this['immediate' + position]) : ratio;
-      // create right offset
-      // min : -16px
-      // max : +16px
-      var style = '';
-      if(position === 'Min'){
-        style =  'calc( ' + this['ratio' + position] * 100 + '% - 16px)';
-      }
-      else{
-        style =  'calc( ' + this['ratio' + position] * 100 + '% + 16px)';
-      }
-      this.$['sliderKnob' + position].style.left = style;
+      this.$['sliderKnob' + position].style.left = this['ratio' + position] * 100 + '%';
     },
 
     _inputChange: function() {
@@ -704,7 +673,7 @@ To change the slider disabled container color:
       return (this.max - this.min) * ratio + this.min;
     },
 
-    _onTrack: function(e) {
+    _onTrack: function(event) {
       switch (event.detail.state) {
         case 'end':
           this._trackEnd(event);
@@ -718,11 +687,12 @@ To change the slider disabled container color:
       }
     },
 
-    _trackStart: function(e) {
-      if(e.target.id === 'sliderKnobMin'){
+    _trackStart: function(event) {
+      var id = event.target.id || event.target.parentElement.id;
+      if (id === 'sliderKnobMin'){
         this.active = 'Min';
       }
-      else if (e.target.id === 'sliderKnobMax'){
+      else if (id === 'sliderKnobMax'){
         this.active = 'Max';
       }
       else{
@@ -738,7 +708,7 @@ To change the slider disabled container color:
       this._maxx = this._w - this._startx;
       this.$['sliderKnob' + this.active].classList.add('dragging');
       this._setDragging(true);
-      e.preventDefault();
+      event.preventDefault();
     },
 
     _trackX: function(e) {
@@ -799,8 +769,8 @@ To change the slider disabled container color:
       this._expandKnob();
     },
 
-    _bardown: function(e) {
-      // e.preventDefault();
+    _bardown: function() {
+      //e.preventDefault();
       // this._setTransiting(true);
       // this._w = this.$.sliderBar.offsetWidth;
       // var rect = this.$.sliderBar.getBoundingClientRect();
@@ -820,7 +790,7 @@ To change the slider disabled container color:
     },
 
     _maxMarkersChanged: function(maxMarkers) {
-      var l = (this.max - this.min) / this.step;
+      var l = ((this.max - this.min) / this.step);
       if (!this.snaps && l > maxMarkers) {
         this._setMarkers([]);
       } else {
@@ -831,14 +801,14 @@ To change the slider disabled container color:
     _getClassNames: function() {
       var classes = {};
 
-      classes['disabled'] = this.disabled;
-      classes['pin'] = this.pin;
-      classes['snaps'] = this.snaps;
-      classes['ring'] = this.immediateMax == this.immediateMin;
-      classes['expand'] = this.expand;
-      classes['dragging'] = this.dragging;
-      classes['transiting'] = this.transiting;
-      classes['editable'] = this.editable;
+      classes.disabled = this.disabled;
+      classes.pin = this.pin;
+      classes.snaps = this.snaps;
+      classes.ring = this.immediateMax === this.immediateMin;
+      classes.expand = this.expand;
+      classes.dragging = this.dragging;
+      classes.transiting = this.transiting;
+      classes.editable = this.editable;
 
       return Object.keys(classes).filter(
         function(className) {
@@ -863,5 +833,5 @@ To change the slider disabled container color:
       }
       this.fire('change');
     }
-  })
+  });
 </script>
