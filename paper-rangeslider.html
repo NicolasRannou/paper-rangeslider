@@ -712,7 +712,7 @@ To change the slider disabled container color:
     },
 
     _trackStart: function(event) {
-      var id = event.target.id || event.target.parentElement.id;
+      var id = event.target.id || event.target.parentElement.id || event.target.parentElement.parentElement.id;
       if (id === 'sliderKnobMin'){
         this.active = 'Min';
       }
