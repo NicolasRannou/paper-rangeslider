@@ -140,8 +140,9 @@ To change the slider disabled container color:
     }
 
     .ring > .bar-container {
-      left: 20px;
-      width: calc(100% - 4px);
+      /* removed: this is causing the bar-container to move when two knobs meet */
+      /*left: 20px;
+      width: calc(100% - 4px);*/
       transition: left 0.18s ease, width 0.18s ease;
     }
 
