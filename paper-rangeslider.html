@@ -140,9 +140,8 @@ To change the slider disabled container color:
     }
 
     .ring > .bar-container {
-      /* removed: this is causing the bar-container to move when two knobs meet */
-      /*left: 20px;
-      width: calc(100% - 4px);*/
+      left: 20px;
+      width: calc(100% - 4px);
       transition: left 0.18s ease, width 0.18s ease;
     }
 
@@ -212,14 +211,6 @@ To change the slider disabled container color:
 
     .sliderKnob.topKnob {
       z-index: 2;
-    }
-
-    .disableExpand .sliderKnob {
-      @apply(--paper-rangeslider-knob);
-    }
-
-    .disableExpand .sliderKnobRadius {
-      padding: var(--paper-rangeslider-knob-radius);
     }
 
     .transiting > .sliderKnob {
@@ -372,7 +363,7 @@ To change the slider disabled container color:
     <template is="dom-if" if="[[editable]]">
       <paper-input id="inputMin" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
     </template>
-    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, immediateMin, immediateMax, min, expand, disableExpand, dragging, transiting, editable)]]">
+    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, immediateMin, immediateMax, min, expand, dragging, transiting, editable)]]">
       <div class="bar-container">
         <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[immediateMin]]" secondary-progress="[[immediateMax]]"
           on-down="_bardown" on-up="_resetKnob" on-track="_onTrack"></paper-progress>
@@ -390,20 +381,14 @@ To change the slider disabled container color:
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
-
-        <div class="sliderKnobRadius">
-          <div class="sliderKnobInner" value$="[[immediateMin]]"></div>
-        </div>
+        <div class="sliderKnobInner" value$="[[immediateMin]]"></div>
       </div>
 
       <div id="sliderKnobMax" class="sliderKnob" on-down="_knobdown" on-up="_resetKnob"
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
-
-        <div class="sliderKnobRadius">
-          <div class="sliderKnobInner" value$="[[immediateMax]]"></div>
-        </div>
+        <div class="sliderKnobInner" value$="[[immediateMax]]"></div>
       </div>
     </div>
 
@@ -530,15 +515,6 @@ To change the slider disabled container color:
         type: Boolean,
         value: false,
         readOnly: true
-      },
-
-      /**
-       * If true, the knob is always expanded
-       */
-      disableExpand: {
-        type: Boolean,
-        value: false,
-        notify: true
       },
 
       /**
@@ -670,18 +646,14 @@ To change the slider disabled container color:
     },
 
     _expandKnob: function() {
-      if (!this.disableExpand) {
-        this._setExpand(true);
-      }
+      this._setExpand(true);
     },
 
     _resetKnob: function() {
       if (this._expandJob) {
         this._expandJob.stop();
       }
-      if (!this.disableExpand) {
-        this._setExpand(false);
-      }
+      this._setExpand(false);
     },
 
     _positionKnob: function(ratio, position) {
@@ -717,7 +689,7 @@ To change the slider disabled container color:
     },
 
     _trackStart: function(event) {
-      var id = event.target.id || event.target.parentElement.id || event.target.parentElement.parentElement.id;
+      var id = event.target.id || event.target.parentElement.id;
       if (id === 'sliderKnobMin'){
         this.active = 'Min';
       }
@@ -848,7 +820,6 @@ To change the slider disabled container color:
       classes.snaps = this.snaps;
       classes.ring = this.immediateMax === this.immediateMin;
       classes.expand = this.expand;
-      classes.disableExpand = this.disableExpand;
       classes.dragging = this.dragging;
       classes.transiting = this.transiting;
       classes.editable = this.editable;
