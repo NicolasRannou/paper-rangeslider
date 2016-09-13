@@ -209,6 +209,10 @@ To change the slider disabled container color:
       /*left: calc(0% - 16px);*/
     }
 
+    .sliderKnob.topKnob {
+      z-index: 2;
+    }
+
     .transiting > .sliderKnob {
       transition: left 0.08s ease;
     }
@@ -332,7 +336,7 @@ To change the slider disabled container color:
 
     .slider-input {
       width: 40px;
-      
+
       overflow: hidden;
     }
 
@@ -708,7 +712,20 @@ To change the slider disabled container color:
       this._maxx = this._w - this._startx;
       this.$['sliderKnob' + this.active].classList.add('dragging');
       this._setDragging(true);
+      this._assignTopKnob();
       event.preventDefault();
+    },
+
+    _assignTopKnob: function() {
+      var sliderKnobNodes = Polymer.dom(this.$.sliderContainer).querySelectorAll('.sliderKnob');
+
+      for (var key in sliderKnobNodes) {
+        if (sliderKnobNodes.hasOwnProperty(key) && typeof sliderKnobNodes[key] === "object") {
+          sliderKnobNodes[key].classList.remove('topKnob');
+        }
+      }
+
+      this.$['sliderKnob' + this.active].classList.add('topKnob');
     },
 
     _trackX: function(e) {
@@ -740,7 +757,7 @@ To change the slider disabled container color:
       else{
         this['immediate' + this.active] = immediate;
       }
-      
+
       var s =  this.$['sliderKnob' + this.active].style;
 
       s.transform = s.webkitTransform = 'translate3d(' + (this.snaps ?
