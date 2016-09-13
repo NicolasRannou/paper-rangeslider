@@ -363,6 +363,7 @@ To change the slider disabled container color:
     <template is="dom-if" if="[[editable]]">
       <paper-input id="inputMin" class="slider-input" disabled$="[[disabled]]" on-change="_inputChange"></paper-input>
     </template>
+
     <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, immediateMin, immediateMax, min, expand, dragging, transiting, editable)]]">
       <div class="bar-container">
         <paper-progress id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" value="[[immediateMin]]" secondary-progress="[[immediateMax]]"
@@ -381,6 +382,7 @@ To change the slider disabled container color:
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
+
         <div class="sliderKnobInner" value$="[[immediateMin]]"></div>
       </div>
 
@@ -388,6 +390,7 @@ To change the slider disabled container color:
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd"
         center-justified center horizontal layout>
+
         <div class="sliderKnobInner" value$="[[immediateMax]]"></div>
       </div>
     </div>
